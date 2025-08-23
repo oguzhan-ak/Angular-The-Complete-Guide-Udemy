@@ -5,6 +5,13 @@ import { NewTaskData, Task } from './task/task.model';
   providedIn: 'root',
 })
 export class TasksService {
+  constructor() {
+    const tasks = localStorage.getItem('tasks');
+    if (tasks) {
+      this.tasks = JSON.parse(tasks);
+    }
+  }
+
   private tasks: any[] = [
     {
       id: '1',
@@ -33,9 +40,15 @@ export class TasksService {
       ...taskData,
     };
     this.tasks.push(newTask);
+    this.saveTasks();
   }
 
   removeTask(taskId: string) {
     this.tasks = this.tasks.filter((task) => task.id !== taskId);
+    this.saveTasks();
+  }
+
+  private saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 }
